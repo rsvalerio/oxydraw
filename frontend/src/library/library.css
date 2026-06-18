@@ -1,0 +1,267 @@
+/* Mirror Excalidraw's Modal/Dialog look so the scene library opens like the
+   other operations (Reset canvas, Save to…, Export): centered on screen, same
+   backdrop, shadow and rounding. */
+.lib-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: #12121233;
+}
+
+.lib-panel {
+  width: 100%;
+  max-width: min(550px, 92vw);
+  max-height: calc(100% - 40px);
+  display: flex;
+  flex-direction: column;
+  background: var(--island-bg-color, #fff);
+  color: var(--text-primary-color, #1b1b1f);
+  border: 1px solid var(--dialog-border-color, rgba(0, 0, 0, 0.1));
+  border-radius: 0.75rem;
+  box-shadow: 0 100px 80px rgba(0, 0, 0, 0.07), 0 22px 18px rgba(0, 0, 0, 0.0417),
+    0 6.6px 5.3px rgba(0, 0, 0, 0.0283);
+  font-family: var(--ui-font, system-ui, sans-serif);
+  overflow: hidden;
+}
+
+.lib-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.lib-close {
+  border: none;
+  background: none;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+}
+
+.lib-body,
+.lib-signin {
+  padding: 12px 16px;
+  overflow-y: auto;
+}
+
+.lib-save,
+.lib-login {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lib-save input,
+.lib-login input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+}
+
+.lib-panel button {
+  cursor: pointer;
+}
+
+.lib-save button,
+.lib-login button,
+.lib-provider {
+  padding: 6px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background: var(--button-bg, #f1f0ff);
+  color: inherit;
+}
+
+.lib-provider {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* Toolbar above the listing: breadcrumb trail on the left, "+ Folder" on the right. */
+.lib-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lib-toolbar > button {
+  flex: none;
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background: var(--button-bg, #f1f0ff);
+  color: inherit;
+}
+
+.lib-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  font-size: 14px;
+}
+
+.lib-breadcrumb button {
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.lib-breadcrumb button:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.lib-crumb-sep {
+  opacity: 0.4;
+  padding: 0 2px;
+}
+
+/* Folder + scene rows. */
+.lib-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lib-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  margin-bottom: 2px;
+}
+
+.lib-item:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.lib-item-main {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: none;
+  background: none;
+  color: inherit;
+  text-align: left;
+}
+
+.lib-item-icon {
+  flex: none;
+}
+
+.lib-item-name {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lib-item-date {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: auto;
+  flex: none;
+}
+
+/* Row actions: subtle until the row is hovered/focused, but always reachable. */
+.lib-item-actions {
+  display: flex;
+  gap: 2px;
+  padding-right: 6px;
+  opacity: 0.25;
+}
+
+.lib-item:hover .lib-item-actions,
+.lib-item:focus-within .lib-item-actions {
+  opacity: 1;
+}
+
+.lib-item-actions button {
+  border: none;
+  background: none;
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.lib-item-actions button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Inline rename editor that replaces a row's name + actions. */
+.lib-rename {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  padding: 6px;
+}
+
+.lib-rename input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+}
+
+.lib-rename button {
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background: var(--button-bg, #f1f0ff);
+  color: inherit;
+}
+
+/* The move-destination picker reuses the panel shell with a footer of actions. */
+.lib-move-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.lib-move-actions button {
+  padding: 6px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background: var(--button-bg, #f1f0ff);
+  color: inherit;
+}
+
+.lib-move-actions .lib-primary {
+  background: var(--color-primary, #6965db);
+  color: #fff;
+  border-color: transparent;
+}
+
+.lib-message {
+  padding: 4px 0;
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+.lib-status {
+  padding: 10px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+}

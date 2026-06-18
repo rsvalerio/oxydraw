@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#121212" />
+    <title>OxyDraw</title>
+    <script>
+      // The editor resolves its bundled fonts relative to this path. We serve them from our
+      // own origin (copied into the build by vite-plugin-static-copy), so point it at root.
+      window.EXCALIDRAW_ASSET_PATH = "/";
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.local
+.vite/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# QEMU core dumps from emulated x86 Docker builds
+*.core
