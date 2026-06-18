@@ -1,0 +1,49 @@
+name: Bump
+permissions:
+  contents: write
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Bump
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'rsvalerio' && github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      # Own-repo token from the my-cloud-ci GitHub App. Unlike GITHUB_TOKEN, pushes made with
+      # it trigger the downstream release workflow on the bumped tag.
+      - name: Mint workflow token (my-cloud-ci GitHub App)
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: rsvalerio
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+          fetch-tags: true
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Install cargo-edit and cocogitto
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-edit,cocogitto
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # cog bump --auto: determine the version from conventional commits, then run the
+      # pre/post bump hooks defined in cog.toml (cargo set-version, git push, push tag).
+      - name: Run cog bump --auto
+        run: cog -vvv bump --auto

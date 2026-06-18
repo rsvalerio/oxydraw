@@ -1,0 +1,59 @@
+name: Publish .deb
+
+# Builds the amd64 .deb (frontend + server, compiled inside a self-contained Docker
+# image) and pushes it into the rsvalerio/apt pool, where the apt repo's own workflow
+# indexes + GPG-signs it. Runs on the same version tags as the
+# cargo-dist Release workflow, but is fully independent of it (it compiles its own binary
+# because the cargo-dist release archives do not embed the frontend).
+on:
+  push:
+    tags:
+      - '**[0-9]+.[0-9]+.[0-9]+*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish-deb:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Build .deb
+        working-directory: packaging
+        run: make build
+
+      - name: Mint apt-scoped token (my-cloud-ci GitHub App)
+        id: apt-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: rsvalerio
+          repositories: apt
+
+      - name: Publish to APT repo
+        env:
+          # Short-lived token scoped to rsvalerio/apt (GITHUB_TOKEN cannot push cross-repo).
+          APT_PUBLISH_TOKEN: ${{ steps.apt-token.outputs.token }}
+        run: |
+          DEB="$(make --no-print-directory -C packaging deb-path)"
+          if [ ! -f "$DEB" ]; then
+            echo "Expected artifact not found: $DEB" >&2
+            ls -la packaging/deb/.build/ >&2 || true
+            exit 1
+          fi
+          git clone "https://x-access-token:${APT_PUBLISH_TOKEN}@github.com/rsvalerio/apt.git" /tmp/apt
+          cp "$DEB" /tmp/apt/pool/
+          cd /tmp/apt
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "pool/$(basename "$DEB")"
+          if git diff --cached --quiet; then
+            echo "No changes to publish (package already present)."
+          else
+            git commit -m "oxydraw: add ${GITHUB_REF_NAME}"
+            git push origin main
+          fi
