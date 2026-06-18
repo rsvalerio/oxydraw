@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+purge)
+    if [ -d /run/systemd/system ]; then
+        systemctl daemon-reload >/dev/null 2>&1 || true
+    fi
+    # Drop the systemd-managed state dir (SQLite database lives here by default).
+    rm -rf /var/lib/oxydraw
+    ;;
+remove)
+    if [ -d /run/systemd/system ]; then
+        systemctl daemon-reload >/dev/null 2>&1 || true
+    fi
+    ;;
+esac
+
+exit 0

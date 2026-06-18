@@ -1,0 +1,39 @@
+[Unit]
+Description=oxydraw — self-hosted Excalidraw collaboration backend
+Documentation=https://github.com/rsvalerio/oxydraw
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/oxydraw
+EnvironmentFile=/etc/oxydraw/oxydraw.env
+Restart=on-failure
+RestartSec=5
+
+# Run as a transient, unprivileged system user managed by systemd; no useradd needed.
+DynamicUser=yes
+# Persistent, writable state at /var/lib/oxydraw (owned by the dynamic user).
+# This is where the SQLite database lives by default (see the env file).
+StateDirectory=oxydraw
+WorkingDirectory=/var/lib/oxydraw
+
+# Sandboxing — the process only needs to listen on a socket and touch its state dir.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RestrictRealtime=yes
+SystemCallArchitectures=native
+ReadWritePaths=/var/lib/oxydraw
+
+[Install]
+WantedBy=multi-user.target

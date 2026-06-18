@@ -1,0 +1,13 @@
+Package: oxydraw
+Version: @VERSION@
+Section: web
+Priority: optional
+Architecture: amd64
+Depends: libc6, ca-certificates
+Maintainer: Rodrigo Valeri <rsvalerio@gmail.com>
+Homepage: https://github.com/rsvalerio/oxydraw
+Description: Self-hosted Excalidraw backend, in Rust
+ Self-hosted Excalidraw backend, written in Rust. Serves the original
+ Excalidraw web UI from a single binary with embedded SQLite persistence:
+ anonymous shareable links, a Socket.IO collaboration relay, and the Firebase
+ emulation the unmodified frontend expects.

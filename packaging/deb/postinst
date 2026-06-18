@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+# The unit runs as a systemd DynamicUser, so there is no system user/group to create.
+case "$1" in
+configure)
+    if [ -d /run/systemd/system ]; then
+        systemctl daemon-reload >/dev/null 2>&1 || true
+        # Enable on install, but do NOT start automatically: the admin can review
+        # /etc/oxydraw/oxydraw.env (storage path, bind address) first.
+        systemctl enable oxydraw.service >/dev/null 2>&1 || true
+        # $2 is the previously-installed version — set only on upgrade. Restart only if
+        # the service was already running; never auto-start a fresh install.
+        if [ -n "$2" ]; then
+            systemctl try-restart oxydraw.service >/dev/null 2>&1 || true
+        fi
+    fi
+    ;;
+esac
+
+exit 0

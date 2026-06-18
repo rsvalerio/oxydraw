@@ -1,0 +1,39 @@
+# Self-contained image that compiles the oxydraw server binary (embedding the prebuilt
+# frontend assets) and assembles the .deb: it provides dpkg-dev (packaging) and the Rust
+# toolchain. The frontend assets are built separately on the host's native arch (Bun's JIT
+# segfaults under amd64 emulation), so Bun is intentionally NOT installed here. The .deb is
+# assembled by packaging/deb/Makefile via this image's `make deb-build` entrypoint, repo at /src.
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Packaging + Rust link toolchain. dpkg-dev/make/tar build the .deb; build-essential/
+# pkg-config/libssl-dev satisfy the Rust link step; curl fetches the toolchain.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        dpkg-dev \
+        make \
+        tar \
+        build-essential \
+        pkg-config \
+        libssl-dev \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Rust stable, matching the project's main Dockerfile (`FROM rust:1-slim`) and CI.
+# The dependency tree outpaces the declared MSRV (rust-version = 1.85), so stable is required.
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+      | sh -s -- -y --profile minimal --default-toolchain stable \
+    && rustc --version && cargo --version
+
+# Assemble the .deb with the repo mounted at /src. ENTRYPOINT/CMD below mean a bare
+# `docker run <image>` runs `make deb-build`:
+#   docker run --rm -v "$PWD:/src" -w /src/packaging <image>
+WORKDIR /src/packaging
+ENTRYPOINT ["make"]
+CMD ["deb-build"]
