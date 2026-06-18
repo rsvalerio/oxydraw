@@ -1,0 +1,29 @@
+[package]
+name = "oxydraw-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish = false
+
+[lints]
+workspace = true
+
+[features]
+# `From<sqlx::Error> for StoreError`, so sqlx-backed stores can use plain `?`. Lives
+# here because the orphan rule blocks the impl in the storage crate.
+sqlx-error = ["dep:sqlx"]
+
+[dependencies]
+sqlx = { workspace = true, optional = true }
+chrono = { workspace = true }
+serde = { workspace = true }
+secrecy = { workspace = true }
+async-trait = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+figment = { workspace = true }
+dotenvy = { workspace = true }
+
+[dev-dependencies]
+figment = { workspace = true, features = ["env", "test"] }

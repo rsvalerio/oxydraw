@@ -1,0 +1,82 @@
+[workspace]
+members = ["crates/*"]
+default-members = ["crates/server"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+authors = ["Rodrigo Valeri"]
+rust-version = "1.85"
+description = "Self-hosted Excalidraw collaboration backend, in Rust"
+repository = "https://github.com/rsvalerio/oxydraw"
+homepage = "https://github.com/rsvalerio/oxydraw"
+
+[workspace.dependencies]
+# internal crates
+oxydraw-core = { path = "crates/core" }
+oxydraw-storage = { path = "crates/storage" }
+oxydraw-collab = { path = "crates/collab" }
+
+# async runtime + web
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "signal", "sync", "time"] }
+axum = "0.8"
+tower-http = { version = "0.6", features = ["cors", "set-header", "trace"] }
+socketioxide = { version = "0.18", features = ["v4", "state"] } # v5 (EIO4) default; v4 adds EIO3; state for shared room registry
+
+# serde / data
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["serde", "clock"] }
+indexmap = "2"
+uuid = { version = "1", features = ["v4"] }
+bytes = "1"
+
+# auth (overlay extension sessions + OAuth login)
+rand = "0.9"
+secrecy = { version = "0.10", features = ["serde"] } # type-enforced secret redaction (SEC-5/SEC-6)
+subtle = "2"
+sha2 = "0.10"
+oauth2 = "5"          # plain-OAuth2 providers (GitHub, …)
+openidconnect = "4"   # OIDC providers (Google, …)
+
+# storage
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio"] }
+
+# config / errors / logging
+figment = { version = "0.10", features = ["env"] }
+dotenvy = "0.15"
+anyhow = "1"
+thiserror = "2"
+async-trait = "0.1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# frontend embedding
+rust-embed = "8"
+mime_guess = "2"
+
+# http client (OAuth token/userinfo calls; also dev/test)
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
+
+# dev / test
+tempfile = "3"
+jsonwebtoken = "9"
+rust_socketio = { version = "0.6", features = ["async"] }
+futures-util = "0.3"
+base64 = "0.22"
+
+# Single source of truth for lint policy; every crate opts in with `[lints] workspace = true`.
+# Deny matches CI (`cargo clippy --all --all-features -- -D warnings`) so local and CI agree.
+[workspace.lints.clippy]
+all = { level = "deny", priority = -1 }
+
+[profile.release]
+strip = true
+lto = true
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
