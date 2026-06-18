@@ -1,0 +1,26 @@
+[package]
+name = "oxydraw-collab"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish = false
+
+[lints]
+workspace = true
+
+[dependencies]
+socketioxide = { workspace = true }
+indexmap = { workspace = true }
+bytes = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }
+tracing-subscriber = { workspace = true }
+axum = { workspace = true }
+tokio = { workspace = true }
+reqwest = { workspace = true }
+rust_socketio = { workspace = true }
+futures-util = { workspace = true }
+base64 = { workspace = true }
