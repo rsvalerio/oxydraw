@@ -1,0 +1,8 @@
+# Keep the Docker build context small. The frontend stage fetches upstream excalidraw
+# itself (pinned tarball); the Rust stages don't need node_modules or target/.
+.git/
+**/target/
+**/node_modules/
+excalidraw/
+backend/crates/server/assets/*
+!backend/crates/server/assets/.gitkeep
