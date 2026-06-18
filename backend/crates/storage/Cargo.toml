@@ -1,0 +1,24 @@
+[package]
+name = "oxydraw-storage"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish = false
+
+[lints]
+workspace = true
+
+[features]
+default = ["sqlite"]
+sqlite = ["dep:sqlx", "sqlx/sqlite", "oxydraw-core/sqlx-error"]
+
+[dependencies]
+oxydraw-core = { workspace = true }
+async-trait = { workspace = true }
+uuid = { workspace = true }
+sqlx = { workspace = true, optional = true }
+
+[dev-dependencies]
+tokio = { workspace = true }
+tempfile = { workspace = true }
