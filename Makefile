@@ -1,7 +1,7 @@
 # Developer entrypoint for oxydraw. `make help` lists targets.
 # OS packaging (.deb) lives in packaging/Makefile (`make deb`).
 SHELL := /bin/bash
-.PHONY: help build release run test fmt clippy check deny cog-check dist-plan pre-release frontend docker docker-run deb clean
+.PHONY: help build release run test fmt clippy check deny trivy cog-check dist-plan pre-release frontend docker docker-run deb clean
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -29,6 +29,10 @@ check: ## All gates: fmt + clippy + test
 
 deny: ## Dependency audit: licenses, advisories, bans (deny.toml)
 	cd backend && cargo deny check
+
+trivy: ## Security scan: vulnerabilities, secrets, misconfigs (filesystem)
+	@command -v trivy >/dev/null || { echo "trivy not found — install with: brew install trivy"; exit 1; }
+	trivy fs --scanners vuln,secret,misconfig .
 
 cog-check: ## Validate conventional commits since last tag + dry-run the version bump
 	@command -v cog >/dev/null || { echo "cog not found — install with: brew install cocogitto"; exit 1; }
