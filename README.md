@@ -15,7 +15,7 @@
   <p align="center">
     A self-hosted <a href="https://excalidraw.com">Excalidraw</a> backend, written in Rust.
     <br />
-    One binary: unmodified upstream UI, SQLite persistence, share links, live collaboration.
+    One binary: unmodified upstream UI, SQLite persistence, share links, and live collaboration.
     <br />
     <br />
     <a href="docs/DEPLOYMENT.md"><strong>Deployment guide »</strong></a>
