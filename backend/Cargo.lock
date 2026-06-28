@@ -1714,7 +1714,7 @@ dependencies = [
 
 [[package]]
 name = "oxydraw"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1746,7 +1746,7 @@ dependencies = [
 
 [[package]]
 name = "oxydraw-collab"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "axum",
  "base64 0.22.1",
@@ -1764,7 +1764,7 @@ dependencies = [
 
 [[package]]
 name = "oxydraw-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1779,7 +1779,7 @@ dependencies = [
 
 [[package]]
 name = "oxydraw-storage"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "oxydraw-core",

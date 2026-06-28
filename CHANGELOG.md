@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.0](https://github.com/rsvalerio/oxydraw/compare/a402eb11fbb6543f1fcf5fd5f5e6704990b80881..v0.2.0) - 2026-06-28
+#### 🚀 Features
+- trigger release - ([5db6221](https://github.com/rsvalerio/oxydraw/commit/5db622163999d5edcf947ef9124baeb2e941db4f)) - [@rsvalerio](https://github.com/rsvalerio), Claude Opus 4.8 (1M context)
+#### 🔧 Build System
+- (**deps**) pin dompurify, lodash-es, ws, and nanoid to patched versions - ([1d1504b](https://github.com/rsvalerio/oxydraw/commit/1d1504bad30b6e8db464d4bc0b073aabdb0752e6)) - [@rsvalerio](https://github.com/rsvalerio)
+- (**deps**) upgrade jsonwebtoken to v10 with rust_crypto backend - ([59d605d](https://github.com/rsvalerio/oxydraw/commit/59d605df1af416bd222f3d2c2094675a5b15613c)) - [@rsvalerio](https://github.com/rsvalerio)
+- (**trivy**) scan dev deps with scoped ignore rules and add license target - ([d5a3319](https://github.com/rsvalerio/oxydraw/commit/d5a3319a1a377a896ca133c7bc92b9b4fab6289e)) - [@rsvalerio](https://github.com/rsvalerio)
+#### 🔄 CI/CD
+- bump checkout to v6 and use client-id for app token - ([a402eb1](https://github.com/rsvalerio/oxydraw/commit/a402eb11fbb6543f1fcf5fd5f5e6704990b80881)) - [@rsvalerio](https://github.com/rsvalerio), Claude Opus 4.8 (1M context)
+#### ⚙️ Miscellaneous
+- (**server**) remove assets .gitkeep placeholder - ([e141853](https://github.com/rsvalerio/oxydraw/commit/e1418537a75be09dd8f379fa589a0fdbe5edad68)) - [@rsvalerio](https://github.com/rsvalerio)
+
+- - -
+
 ## [v0.1.0](https://github.com/rsvalerio/oxydraw/compare/4ed218e7c2cadfb54d032c276c7d4a40d0f30513..v0.1.0) - 2026-06-28
 #### 🚀 Features
 - (**collab**) add socket.io relay for the excalidraw room protocol - ([6be8a50](https://github.com/rsvalerio/oxydraw/commit/6be8a501fd5e224158256da2830e5d060ad1aecb)) - [@rsvalerio](https://github.com/rsvalerio), Claude Opus 4.8 (1M context)
