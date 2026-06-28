@@ -38,6 +38,8 @@ jobs:
         env:
           # Short-lived token scoped to rsvalerio/apt (GITHUB_TOKEN cannot push cross-repo).
           APT_PUBLISH_TOKEN: ${{ steps.apt-token.outputs.token }}
+          GH_TOKEN: ${{ steps.apt-token.outputs.token }}
+          APP_SLUG: ${{ steps.apt-token.outputs.app-slug }}
         run: |
           DEB="$(make --no-print-directory -C packaging deb-path)"
           if [ ! -f "$DEB" ]; then
@@ -48,8 +50,9 @@ jobs:
           git clone "https://x-access-token:${APT_PUBLISH_TOKEN}@github.com/rsvalerio/apt.git" /tmp/apt
           cp "$DEB" /tmp/apt/pool/
           cd /tmp/apt
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          app_user_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
+          git config user.name  "${APP_SLUG}[bot]"
+          git config user.email "${app_user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
           git add "pool/$(basename "$DEB")"
           if git diff --cached --quiet; then
             echo "No changes to publish (package already present)."

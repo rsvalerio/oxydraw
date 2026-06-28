@@ -38,10 +38,17 @@ jobs:
         with:
           tool: cargo-edit,cocogitto
 
+      # Attribute the bump commit/tag to the my-cloud-ci App's bot identity instead of
+      # github-actions[bot]. The bot user id is required for the noreply email so GitHub
+      # links the commit to the bot account.
       - name: Configure git user
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          user_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
 
       # cog bump --auto: determine the version from conventional commits, then run the
       # pre/post bump hooks defined in cog.toml (cargo set-version, git push, push tag).

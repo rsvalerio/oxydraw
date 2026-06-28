@@ -16,8 +16,6 @@ jobs:
     runs-on: "ubuntu-22.04"
     env:
       PLAN: ${{ inputs.plan }}
-      GITHUB_USER: "axo bot"
-      GITHUB_EMAIL: "admin+bot@axo.dev"
     steps:
       - name: Mint homebrew-tap token (my-cloud-ci GitHub App)
         id: tap-token
@@ -42,9 +40,14 @@ jobs:
       # This is extra complex because you can make your Formula name not match your app name
       # so we need to find releases with a *.rb file, and publish with that filename.
       - name: Commit formula files
+        env:
+          GH_TOKEN: ${{ steps.tap-token.outputs.token }}
+          APP_SLUG: ${{ steps.tap-token.outputs.app-slug }}
         run: |
-          git config --global user.name "${GITHUB_USER}"
-          git config --global user.email "${GITHUB_EMAIL}"
+          # Attribute the formula commit to the my-cloud-ci App's bot identity (was "axo bot").
+          app_user_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
+          git config --global user.name "${APP_SLUG}[bot]"
+          git config --global user.email "${app_user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
 
           for release in $(echo "$PLAN" | jq --compact-output '.releases[] | select([.artifacts[] | endswith(".rb")] | any)'); do
             filename=$(echo "$release" | jq '.artifacts[] | select(endswith(".rb"))' --raw-output)
