@@ -62,7 +62,9 @@ reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"
 
 # dev / test
 tempfile = "3"
-jsonwebtoken = "9"
+# v10 ships no crypto backend by default (it would fall back to a rustls process-level
+# CryptoProvider and panic at sign time), so opt into the self-contained pure-Rust backend.
+jsonwebtoken = { version = "10", features = ["rust_crypto"] }
 rust_socketio = { version = "0.6", features = ["async"] }
 futures-util = "0.3"
 base64 = "0.22"
