@@ -1,0 +1,14 @@
+# Trivy ignore rules. Scoped per path so a rule still fires everywhere else.
+
+misconfigurations:
+  # packaging/docker/Dockerfile.build is a build-only image: its entrypoint is
+  # `make deb-build`, which compiles the binary and assembles the .deb (repo
+  # mounted at /src) and then exits. It is never run as a long-lived service.
+  - id: DS-0002 # non-root USER — the .deb assembly needs root for package file ownership.
+    paths:
+      - "packaging/docker/Dockerfile.build"
+    statement: "Build-only image, not a runtime service; root is required to assemble the .deb."
+  - id: DS-0026 # HEALTHCHECK — no running service to probe; the build entrypoint exits.
+    paths:
+      - "packaging/docker/Dockerfile.build"
+    statement: "Build-only image with no long-running process to health-check."
